@@ -1,0 +1,100 @@
+/*
+ Week3, Option 1 (General)
+ Based on course code
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <time.h>
+
+#define RANDLIM 1001 //limit for random [0-1000]
+#define LNODES  100  //by the task
+#define PRNTROW 5    //by the task
+
+typedef struct list {int data; struct list *next;} list;
+
+list* create_list(int d)
+{	
+	list* head = malloc(sizeof(list));
+	head->data = d;
+	head->next = NULL;
+	return head;
+}
+list* add_to_front(int d, list* h)
+{
+	list* head = create_list(d);
+	head->next = h;
+	return head;
+}
+list* array_to_list(int d[], int size)
+{
+	list* head = create_list(d[0]);
+	int i;
+	for(i = 1; i < size; i++)
+		head = add_to_front(d[i], head);
+	return head;
+}
+void print_list(list *h, char *title)
+{	
+	int i = 0;
+	printf("%s\n", title);
+	while(h != NULL){
+		printf("%d)%d\t", ++i, h -> data);
+		h = h -> next;
+
+		if(!(i%PRNTROW)) // Print values in rows of 5 
+			printf("\n");
+	}
+}
+void fillarr(int arr[], int size){
+	for(int i = 0; i < size; i++)
+		arr[i] = rand() % RANDLIM;
+}
+
+void bSort(struct list *h) 
+{ 
+    int mark; 
+    struct list *tmp1; 
+    struct list *tmp2 = NULL; 
+  
+    do
+    { 
+        mark = 0; 
+        tmp1 = h; 
+  
+        while (tmp1->next != tmp2) 
+        { 
+            if (tmp1->data > tmp1->next->data) 
+            {  
+                int tmp = tmp1->data; 
+		tmp1->data = tmp1->next->data; 
+		tmp1->next->data = tmp;
+                mark++; 
+            } 
+            tmp1 = tmp1->next; 
+        } 
+        tmp2 = tmp1; 
+    } 
+    while (mark); 
+}
+
+
+int main()
+{
+	time_t t;
+        srand((unsigned) time(&t)); //Random number generator init
+
+	list* head = NULL;
+	int data[LNODES]; 
+
+	fillarr(data, LNODES);
+
+	head = array_to_list(data, LNODES);
+	print_list(head, "After creating the list.");
+	printf("\n");
+
+	bSort(head);
+	print_list(head, "After bubbling the list.");
+
+	return 0;
+}
