@@ -1,5 +1,5 @@
 /*
- Week4, Honors-List
+ Week4, Honors
 */
 #include <stdio.h>
 #include <stdlib.h>
