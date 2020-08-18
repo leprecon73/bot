@@ -1,5 +1,5 @@
 /*
- Week4, Honors
+ Week 4 Assignment Option 1
 */
 #include <stdio.h>
 #include <stdlib.h>
