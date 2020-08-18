@@ -1,0 +1,87 @@
+/*
+ Week4, Honors-List
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int cnt_data(FILE *);//Return first number from text.txt
+void fill_array(FILE *, int [], int);//Fill array with numbers
+
+int main()
+{	
+	int size = 0, max = 0;
+	double average = 0;
+	FILE *fptr; 
+	char *s1 = "Average is: ";
+	char *s2 = "Max element is: ";
+	char buf1[25],buf2[25];
+	
+	//Opening text.txt file from the current dir
+	//Use something $echo "5 17 9 12 556 78" > text.txt to create it
+	if ((fptr = fopen("./text.txt","r")) == NULL){
+		printf("Error! opening file.\n");
+	        exit(1);
+	}
+
+	size = cnt_data(fptr);   
+	int data[size];		    //by the task
+	
+	fill_array(fptr, data, size);
+	fclose(fptr);
+	
+	//Count average of array and store max element in [0] of array 
+	max = data[0];
+	for(int i = 0; i < size; i++){
+		if(max < data[i])
+			max = data[i];
+
+		average += data[i];
+	}
+	average /= size;
+	
+	snprintf(buf2, 25, "%s%d", s2,max);   //Concatenate strings with
+	snprintf(buf1, 25, "%s%f", s1,average);//int and float
+
+	printf("%s\n", buf1); //Output it
+	printf("%s\n", buf2);
+
+	fptr = fopen("answer-hw3", "w"); // Create if not exist and write
+	fprintf(fptr, "%s\n%s\n", buf1, buf2);
+
+	fclose(fptr);
+
+	return 0;
+}
+int cnt_data(FILE *fptr) //Return first number from text.txt
+{
+        int i = 0;
+        char c, buff[5]; //with a margin
+        while((c=fgetc(fptr)) != ' '){ //by the task
+                       buff[i] = c;
+                       i++;
+        }
+        buff[i] = '\0';
+
+        return atoi(buff);
+}
+void fill_array(FILE *fptr, int data[], int size) //Fill array with numbers
+{
+        int i = 0;
+        char c, buff[1000]; //with a margin
+        while((c=fgetc(fptr))!=EOF) {
+                       buff[i] = c;
+                i++;
+        }
+        buff[i] = '\0', i = 0;
+        char *ptr = strtok(buff, " ");
+ 
+        while (ptr != NULL)
+        {
+                if(i >= size) //Use protection
+                        exit(1);
+                data[i++] = atoi(ptr);
+                ptr = strtok(NULL, " ");
+        }
+}
+
