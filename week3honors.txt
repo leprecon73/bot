@@ -1,0 +1,116 @@
+#include <stdio.h> 
+#include <stdlib.h>
+#include <time.h>
+
+#define RANDLIM 50  //limit for random [0-49] by task
+#define ELEMENT 200 //by task
+
+// structure of a doubly node 
+typedef struct dllist {int data;struct dllist *prev;struct dllist *next;} dllist; 
+ 
+void insertToList(dllist **, int);	//Create and add node to list
+void printList(dllist *, char *);	//Print list with title
+void bSort(dllist *);			//Sort list
+void fillarr(int [], int);              //Fill array with random numbers
+void deleteDuplicatesData(dllist*);	//Delete all nodes with dupicate in data
+
+int main() 
+{ 
+	dllist *h = NULL; 
+        time_t t;
+	int data[ELEMENT];
+	
+	srand((unsigned) time(&t)); //Random number generator init
+
+	fillarr(data, ELEMENT);
+
+	for (int i = 0; i < ELEMENT; i++) 
+	        insertToList(&h, data[i]); 
+   
+	printList(h, "\nAfter creating the doubly list and fill it with random numbers [0-49]."); 
+   
+	bSort(h); 
+     
+	printList(h, "\nAfter sorting the doubly list."); 
+
+	deleteDuplicatesData(h);
+
+	printList(h, "\nAfter delete duplicates data.");
+
+	return 0; 
+} 
+void insertToList(dllist **h, int data) 
+{ 
+    dllist *tmp = malloc(sizeof(dllist)); 
+    tmp->data = data; 
+    tmp->next = *h; 
+    if (*h != NULL) 
+       (*h)->prev = tmp; 
+    *h = tmp; 
+}
+void printList(dllist *h, char *title) 
+{ 
+     int i = 0;
+        printf("%s\n", title);
+        while(h != NULL){
+                printf("%d)%d\t", ++i, h -> data);
+                h = h -> next;
+
+                if(!(i%20)) //Print in row of 20
+                        printf("\n");
+        }
+        printf("\n");
+}
+void bSort(dllist *h) 
+{ 
+    int mark; 
+    dllist *tmp; 
+    dllist *last = NULL; 
+    
+    if (h == NULL) 
+        return; 
+   
+    do
+    { 
+        mark = 0; 
+        tmp = h; 
+   
+        while (tmp->next != last) 
+        { 
+            if (tmp->data > tmp->next->data)  // Switch two data's
+            {				      // if previous greater
+                int i = tmp->data;	      // then next
+		tmp->data = tmp->next->data;
+		tmp->next->data = i;
+                mark = 1; 
+            } 
+            tmp = tmp->next; 
+        } 
+        last = tmp; 
+    } 
+    while (mark); 
+} 
+void fillarr(int arr[], int size){
+        for(int i = 0; i < size; i++)
+                arr[i] = rand() % RANDLIM; //Generate random number [0-49]
+}
+void deleteDuplicatesData(dllist *h) 
+{ 
+    dllist* last = h; 
+    dllist* nodenext;  
+  
+    while (last != NULL  && last->next != NULL) //Current node and next node 
+    {						//not NULL
+	
+       if (last->data == last->next->data)	//Found eq data
+       { 
+           nodenext = last->next->next;		//Switch to next after
+           free(last->next);			//Delete node
+           last->next = nodenext;   
+       } 
+       else //Skip it
+       { 
+          last = last->next;  
+       } 
+    } 
+}
